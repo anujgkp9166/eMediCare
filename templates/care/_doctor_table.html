@@ -1,0 +1,13 @@
+{% if items %}
+<div class="table-wrap"><table class="table">
+  <thead><tr><th>Patient</th><th>Date &amp; time</th><th>Type</th><th>Reason</th><th>Status</th></tr></thead>
+  <tbody>{% for a in items %}
+    <tr>
+      <td><strong>{{ a.patient.display_name }}</strong><div class="small muted">{{ a.patient.phone }}</div></td>
+      <td><strong>{{ a.date|date:"M d, Y" }}</strong><div class="small muted">{{ a.time|time:"h:i A" }}</div></td>
+      <td>{{ a.get_kind_display }}<div class="small muted">{{ a.get_mode_display }}</div></td>
+      <td class="small">{{ a.reason|default:"—"|truncatechars:80 }}</td>
+      <td><span class="badge s-{{ a.status }}">{{ a.get_status_display }}</span></td>
+    </tr>{% endfor %}
+  </tbody></table></div>
+{% else %}<div class="card empty">{{ empty }}</div>{% endif %}

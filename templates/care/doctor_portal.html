@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}My schedule{% endblock %}
+{% block content %}
+<div class="container page-head"><span class="eyebrow">Doctor portal</span><h1 style="font-size:2rem">{% if doctor %}{{ doctor.display_name }}{% else %}Welcome{% endif %}</h1><p>Your schedule and patients. Bookings and changes are managed by the {{ SITE_NAME }} admin team.</p></div>
+<div class="container page-body stack">
+{% if not doctor %}
+  <div class="card empty"><div class="big">🩺</div><p>Your login is not linked to a doctor profile yet. Please contact the {{ SITE_NAME }} admin team.</p></div>
+{% else %}
+  {% if not doctor.is_verified %}<div class="notice warn"><span>⏳</span><span><strong>Your profile is awaiting verification.</strong> Our team is checking your details. Once approved, patients can find and book you.</span></div>{% endif %}
+  <h3>Today</h3>
+  {% include "care/_doctor_table.html" with items=today_list empty="No appointments today." %}
+  <h3>Upcoming</h3>
+  {% include "care/_doctor_table.html" with items=upcoming empty="No upcoming appointments." %}
+  <h3>Recent</h3>
+  {% include "care/_doctor_table.html" with items=past empty="No past appointments yet." %}
+{% endif %}
+</div>
+{% endblock %}

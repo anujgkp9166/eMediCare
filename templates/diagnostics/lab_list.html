@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Diagnostic labs{% endblock %}
+{% block content %}
+<div class="container page-head"><span class="eyebrow">Verified local partners</span><h1>Diagnostics, made clearer.</h1><p>Compare test availability and partner lab prices near you.</p></div>
+<div class="container page-body">
+  <form class="filters" method="get">
+    <input class="input" type="search" name="q" value="{{ q }}" placeholder="Search a test or lab, e.g. HbA1c" aria-label="Search tests">
+    <select class="input" name="category" aria-label="Category"><option value="">All categories</option>{% for c in categories %}<option value="{{ c }}" {% if c == category %}selected{% endif %}>{{ c }}</option>{% endfor %}</select>
+    <select class="input" name="sort" aria-label="Sort by"><option value="price" {% if sort == 'price' %}selected{% endif %}>Lowest price</option><option value="distance" {% if sort == 'distance' %}selected{% endif %}>Nearest lab</option><option value="speed" {% if sort == 'speed' %}selected{% endif %}>Fastest report</option></select>
+    <button class="btn btn-primary" type="submit">Search</button>
+  </form>
+  <div class="notice" style="margin-bottom:1.5rem"><span>ℹ️</span><span>Only book a test recommended by your doctor. Prices are indicative; final charges are confirmed by the partner lab.</span></div>
+  <div class="row between wrap" style="margin-bottom:1rem"><h2 style="margin:0;font-size:1.4rem">{{ offerings|length }} test option{{ offerings|length|pluralize }} near you</h2></div>
+  {% if offerings %}
+  <div class="grid g3">
+    {% for o in offerings %}
+    <div class="card">
+      <span class="tag">{{ o.test.category }}</span>
+      <h3 style="margin-top:.6rem">{{ o.test.name }}</h3>
+      <p class="small muted" style="margin-bottom:.4rem">{{ o.lab.name }}{% if o.lab.area %} · {{ o.lab.area }}{% endif %}</p>
+      {% if o.test.preparation %}<p class="small" style="margin-bottom:.4rem">🍽️ {{ o.test.preparation }}</p>{% endif %}
+      <div class="meta"><span class="tag g">✓ Verified partner</span><span class="tag">📍 {{ o.lab.distance_km }} km</span><span class="tag">⏱ Within {{ o.turnaround_hours }} hours</span>{% if o.lab.home_collection %}<span class="tag">🏠 Home collection</span>{% endif %}</div>
+      <div class="row between"><div class="price">₹{{ o.price|floatformat:0 }}<small> indicative</small></div>
+      {% if user.is_authenticated and user.role != 'patient' %}{% else %}<a class="btn btn-primary btn-sm" href="{% if user.is_authenticated %}{% url 'diagnostics:request_create' %}?offering={{ o.pk }}{% else %}{% url 'accounts:login' %}?next={% url 'diagnostics:request_create' %}%3Foffering%3D{{ o.pk }}{% endif %}">Choose this test →</a>{% endif %}</div>
+      <p class="small muted" style="margin:.8rem 0 0">Final test choice should follow your doctor’s advice.</p>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="card empty"><div class="big">🧪</div><p>No tests match your search.</p><a class="btn btn-outline btn-sm" href="{% url 'diagnostics:lab_list' %}">Clear filters</a></div>
+  {% endif %}
+
+  <h2 style="margin:3rem 0 1rem;font-size:1.4rem">Our partner labs</h2>
+  <div class="grid g2">
+    {% for l in labs %}
+    <div class="card"><div class="row between wrap"><h3 style="margin:0">{{ l.name }}</h3><span class="verified">✓ Verified</span></div>
+      <p class="muted" style="margin:.4rem 0">📍 {{ l.address|default:l.area }}</p>
+      <div class="meta"><span class="tag">🕒 {{ l.opening_hours }}</span>{% if l.home_collection %}<span class="tag g">🏠 Home collection</span>{% endif %}<span class="tag">{{ l.distance_km }} km away</span></div></div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

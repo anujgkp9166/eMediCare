@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Appointments{% endblock %}
+{% block content %}
+<div class="container page-head row between wrap"><div><span class="eyebrow">My care</span><h1 style="font-size:2rem">Appointments</h1><p>All your consultations and follow-ups in one place.</p></div><a class="btn btn-primary" href="{% url 'care:book' %}">+ Book an appointment</a></div>
+<div class="container page-body stack">
+  <div class="tabs"><a href="?tab=upcoming" class="{% if tab == 'upcoming' %}on{% endif %}">Upcoming</a><a href="?tab=past" class="{% if tab == 'past' %}on{% endif %}">Past</a><a href="?tab=all" class="{% if tab == 'all' %}on{% endif %}">All</a></div>
+  {% if appointments %}
+    {% include "care/_appointment_table.html" %}
+  {% else %}
+    <div class="card empty"><div class="big">🗓️</div><p>No appointments here yet.</p><a class="btn btn-primary btn-sm" href="{% url 'care:book' %}">Book your first appointment</a></div>
+  {% endif %}
+</div>
+{% endblock %}

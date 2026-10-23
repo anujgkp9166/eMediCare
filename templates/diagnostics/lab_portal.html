@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Lab test requests{% endblock %}
+{% block content %}
+<div class="container page-head"><span class="eyebrow">Lab partner portal</span><h1 style="font-size:2rem">{% if lab %}{{ lab.name }}{% else %}Welcome{% endif %}</h1><p>Test requests assigned to your lab. Scheduling and report uploads are handled by the {{ SITE_NAME }} admin team.</p></div>
+<div class="container page-body stack">
+{% if not lab %}
+  <div class="card empty"><div class="big">🧪</div><p>Your login is not linked to a lab profile yet. Please contact the {{ SITE_NAME }} admin team.</p></div>
+{% else %}
+  {% if not lab.is_verified %}<div class="notice warn"><span>⏳</span><span><strong>Your lab is awaiting verification.</strong> Our team will contact you to confirm details and set up your test price list. After approval, patients can request tests at your lab.</span></div>{% endif %}
+  <h3>Active requests <span class="tag">{{ active|length }}</span></h3>
+  {% if active %}
+  <div class="table-wrap"><table class="table">
+    <thead><tr><th>Patient</th><th>Test</th><th>Collection</th><th>Address</th><th>Status</th></tr></thead>
+    <tbody>{% for t in active %}
+      <tr>
+        <td><strong>{{ t.patient.display_name }}</strong><div class="small muted">{{ t.patient.phone }}</div></td>
+        <td>{{ t.lab_test.test.name }}</td>
+        <td>{{ t.get_collection_type_display }}<div class="small muted">{% if t.scheduled_slot %}{{ t.scheduled_slot }}{% else %}Preferred {{ t.preferred_date|date:"M d" }}{% endif %}</div></td>
+        <td class="small">{% if t.collection_type == 'home' %}{{ t.address|truncatechars:70 }}{% else %}—{% endif %}</td>
+        <td><span class="badge s-{{ t.status }}">{{ t.get_status_display }}</span></td>
+      </tr>{% endfor %}
+    </tbody></table></div>
+  {% else %}<div class="card empty">No active requests right now.</div>{% endif %}
+  <h3>Recently completed</h3>
+  {% if done %}
+  <div class="table-wrap"><table class="table"><thead><tr><th>Patient</th><th>Test</th><th>Status</th></tr></thead>
+    <tbody>{% for t in done %}<tr><td>{{ t.patient.display_name }}</td><td>{{ t.lab_test.test.name }}</td><td><span class="badge s-{{ t.status }}">{{ t.get_status_display }}</span></td></tr>{% endfor %}</tbody></table></div>
+  {% else %}<div class="card empty">Nothing completed yet.</div>{% endif %}
+{% endif %}
+</div>
+{% endblock %}

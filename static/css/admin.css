@@ -1,0 +1,35 @@
+/* eMediCare+ branding for the Django admin */
+:root, html[data-theme="light"] {
+  --primary: #14456b;
+  --secondary: #0a6cb0;
+  --accent: #4aa22b;
+  --primary-fg: #fff;
+  --header-color: #fff;
+  --header-branding-color: #fff;
+  --header-bg: #14456b;
+  --header-link-color: #fff;
+  --breadcrumbs-fg: #d7e8f6;
+  --breadcrumbs-link-fg: #fff;
+  --breadcrumbs-bg: #0a6cb0;
+  --link-fg: #0a6cb0;
+  --link-hover-color: #085590;
+  --button-bg: #0a6cb0;
+  --button-hover-bg: #085590;
+  --default-button-bg: #14456b;
+  --default-button-hover-bg: #0c2f4b;
+  --object-tools-bg: #4aa22b;
+  --object-tools-hover-bg: #37861f;
+  --selected-row: #eaf6e4;
+}
+#header { border-bottom: 4px solid #4aa22b; }
+#site-name a { display: flex; align-items: center; gap: .6rem; font-weight: 700; letter-spacing: .01em; }
+#site-name img { height: 34px; background: #fff; border-radius: 8px; padding: 3px 5px; }
+.module h2, .module caption, .inline-group h2 { background: #14456b; }
+.dash { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.dash a.tile { display: block; background: #fff; border: 1px solid #dbe5ec; border-radius: 12px; padding: 14px 16px; text-decoration: none; box-shadow: 0 1px 3px rgba(12,47,75,.06); }
+.dash a.tile:hover { border-color: #0a6cb0; }
+.dash .n { font-size: 28px; font-weight: 800; color: #14456b; line-height: 1.1; }
+.dash .l { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: #5b6b79; font-weight: 600; }
+.dash a.tile.alert .n { color: #d3182a; }
+.queues { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.queues .module table { width: 100%; }

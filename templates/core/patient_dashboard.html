@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}My overview{% endblock %}
+{% block content %}
+<div class="container page-head row between wrap">
+  <div><span class="eyebrow">Your care, connected</span><h1 style="font-size:2rem">Welcome, {{ user.first_name|default:user.username }}</h1><p>Your healthcare journey, together in one place.</p></div>
+  <a class="btn btn-primary" href="{% url 'care:book' %}">+ Book an appointment</a>
+</div>
+<div class="container page-body stack">
+  <div class="card">
+    <div class="row between wrap" style="margin-bottom:1rem"><h3 style="margin:0">From consultation to follow-up</h3><span class="tag g">{{ steps_done }} / 5 steps</span></div>
+    <div class="journey">
+      {% for label, done in steps %}
+      <div class="step {% if done %}done{% endif %}"><div class="dot">{% if done %}✓{% else %}{{ forloop.counter }}{% endif %}</div><strong>{{ label }}</strong></div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="grid g3">
+    <a class="card stat-card" href="{% url 'care:appointment_list' %}"><div class="lbl">Appointments</div><div class="num">{{ appointment_count }}</div><p class="small muted" style="margin:.5rem 0 0">View appointments →</p></a>
+    <a class="card stat-card" href="{% url 'diagnostics:reports' %}"><div class="lbl">Test requests</div><div class="num">{{ test_count }}</div><p class="small muted" style="margin:.5rem 0 0">Track a test →</p></a>
+    <a class="card stat-card" href="{% url 'diagnostics:reports' %}"><div class="lbl">Digital reports</div><div class="num">{{ report_count }}</div><p class="small muted" style="margin:.5rem 0 0">Open reports →</p></a>
+  </div>
+
+  <div class="grid g2" style="align-items:start">
+    <div class="card">
+      <div class="row between"><h3 style="margin:0">Upcoming appointment</h3><a class="small" href="{% url 'care:appointment_list' %}">See all →</a></div>
+      {% if upcoming %}
+        <div class="row" style="margin-top:1rem;align-items:flex-start">
+          <div class="date-chip"><small>{{ upcoming.date|date:"M" }}</small><b>{{ upcoming.date|date:"d" }}</b><small>{{ upcoming.date|date:"D" }}</small></div>
+          <div>
+            <h3 style="margin:0">{{ upcoming.doctor.display_name }}</h3>
+            <div class="muted">{{ upcoming.doctor.specialization }} · {{ upcoming.get_kind_display }}</div>
+            <p style="margin:.4rem 0">🕒 {{ upcoming.time|time:"h:i A" }} · <span class="badge s-{{ upcoming.status }}">{{ upcoming.get_status_display }}</span></p>
+            <a class="btn btn-outline btn-sm" href="{% url 'care:appointment_detail' upcoming.pk %}">View details</a>
+          </div>
+        </div>
+      {% else %}
+        <div class="empty"><div class="big">🗓️</div><p>No upcoming appointments.</p><a class="btn btn-primary btn-sm" href="{% url 'care:book' %}">Book now</a></div>
+      {% endif %}
+    </div>
+    <div class="card">
+      <h3>Care team</h3>
+      {% for d in care_team %}
+        <div class="person" style="margin:.8rem 0"><div class="avatar lg">{% if d.photo %}<img src="{{ d.photo.url }}" alt="">{% else %}{{ d.initials }}{% endif %}</div><div><h3 style="margin:0">{{ d.display_name }}</h3><div class="muted">{{ d.specialization }}</div><span class="verified">✓ Verified</span></div></div>
+      {% empty %}
+        <p class="muted">Your doctors will appear here after your first appointment.</p><a class="btn btn-outline btn-sm" href="{% url 'care:doctor_list' %}">Find a doctor</a>
+      {% endfor %}
+      <p class="small muted" style="margin-top:1rem">Your report and follow-up stay connected with the same doctor.</p>
+      <a class="btn btn-outline btn-sm" href="{% url 'diagnostics:lab_list' %}">Explore diagnostic tests</a>
+    </div>
+  </div>
+
+  {% if recent %}
+  <div>
+    <div class="row between" style="margin-bottom:.8rem"><h3 style="margin:0">Recent appointments</h3><a class="small" href="{% url 'care:appointment_list' %}?tab=all">All appointments →</a></div>
+    {% include "care/_appointment_table.html" with appointments=recent %}
+  </div>
+  {% endif %}
+  <div class="notice"><span>ℹ️</span><span><strong>Care with responsibility.</strong> {{ SITE_NAME }} does not diagnose. Your qualified doctor makes all medical decisions and may recommend an in-person visit when needed.</span></div>
+</div>
+{% endblock %}

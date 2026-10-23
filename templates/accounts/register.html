@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Create your account{% endblock %}
+{% block footer %}{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card" style="width:min(640px,94%)">
+    <img class="logo" src="{% static 'img/logo-full.png' %}" alt="{{ SITE_NAME }}">
+    {% include "accounts/_register_tabs.html" with active="patient" %}
+    <h2 class="center">Create your patient account</h2>
+    <p class="muted center">It takes less than a minute.</p>
+    <form method="post" novalidate>{% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="form-row">{% include "partials/field.html" with field=form.first_name %}{% include "partials/field.html" with field=form.last_name %}</div>
+      <div class="form-row">{% include "partials/field.html" with field=form.phone %}{% include "partials/field.html" with field=form.email %}</div>
+      <div class="form-row">{% include "partials/field.html" with field=form.gender %}{% include "partials/field.html" with field=form.date_of_birth %}</div>
+      {% include "partials/field.html" with field=form.city %}
+      {% include "partials/field.html" with field=form.username %}
+      <div class="form-row">{% include "partials/field.html" with field=form.password1 %}{% include "partials/field.html" with field=form.password2 %}</div>
+      {% include "partials/field.html" with field=form.agree %}
+      <button class="btn btn-primary btn-block" type="submit">Create account</button>
+    </form>
+    <p class="center small muted" style="margin:1.2rem 0 0">Already registered? <a href="{% url 'accounts:login' %}"><strong>Log in</strong></a></p>
+  </div>
+</div>
+{% endblock %}

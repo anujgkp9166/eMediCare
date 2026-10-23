@@ -1,0 +1,19 @@
+{% extends "admin/index.html" %}
+{% block content %}
+{% if stats %}
+<div class="dash">
+  {% for s in stats %}<a class="tile {% if s.alert and s.value %}alert{% endif %}" href="{{ s.url }}"><div class="n">{{ s.value }}</div><div class="l">{{ s.label }}</div></a>{% endfor %}
+</div>
+<div class="queues">
+  <div class="module"><table><caption>Appointments awaiting confirmation</caption>
+    {% for a in pending_appointments %}<tr><td><a href="{% url 'admin:care_appointment_change' a.pk %}">{{ a.patient.display_name }}</a></td><td>{{ a.doctor.display_name }}</td><td>{{ a.date|date:"d M" }} {{ a.time|time:"h:i A" }}</td></tr>
+    {% empty %}<tr><td>Nothing waiting. All caught up ✓</td></tr>{% endfor %}
+  </table></div>
+  <div class="module"><table><caption>Test requests to schedule</caption>
+    {% for t in pending_requests %}<tr><td><a href="{% url 'admin:diagnostics_testrequest_change' t.pk %}">{{ t.patient.display_name }}</a></td><td>{{ t.lab_test.test.name }}</td><td>{{ t.lab_test.lab.name }}</td></tr>
+    {% empty %}<tr><td>Nothing waiting. All caught up ✓</td></tr>{% endfor %}
+  </table></div>
+</div>
+{% endif %}
+{{ block.super }}
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Reports & follow-up{% endblock %}
+{% block content %}
+<div class="container page-head row between wrap"><div><span class="eyebrow">Your health records</span><h1 style="font-size:2rem">Reports &amp; follow-up</h1><p>Reports stay connected to the doctor who knows your care journey.</p></div><a class="btn btn-primary" href="{% url 'diagnostics:lab_list' %}">Find a diagnostic lab →</a></div>
+<div class="container page-body stack">
+  <h3>Your digital reports <span class="tag">{{ reports|length }}</span></h3>
+  {% if reports %}
+  <div class="grid g2">
+    {% for r in reports %}
+    <div class="card stack">
+      <div class="row between"><div class="row"><div class="icon g" style="margin:0">📄</div><div><h3 style="margin:0">{{ r.test_request.lab_test.test.name }}</h3><div class="small muted">{{ r.reported_on|date:"M d, Y" }} · {{ r.test_request.lab_test.lab.name }}</div></div></div></div>
+      {% if r.summary %}<p class="muted" style="margin:0">{{ r.summary }}</p>{% endif %}
+      {% if r.doctor_remarks %}<div class="card flat" style="background:var(--green-l);border-color:#cfe8c3"><strong>Doctor’s remarks{% if r.reviewed_by %} · {{ r.reviewed_by.display_name }}{% endif %}</strong><p style="margin:.3rem 0 0">{{ r.doctor_remarks|linebreaksbr }}</p></div>{% endif %}
+      <div class="row wrap">
+        <a class="btn btn-outline btn-sm" href="{% url 'diagnostics:report_file' r.pk %}" target="_blank" rel="noopener">View report</a>
+        <a class="btn btn-primary btn-sm" href="{% url 'care:book' %}?{% if r.test_request.appointment %}doctor={{ r.test_request.appointment.doctor_id }}&{% endif %}kind=follow_up">Book follow-up →</a>
+      </div>
+      <p class="small muted" style="margin:0">This is not a diagnosis. Please discuss all results with your doctor.</p>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="card empty"><div class="big">📄</div><p>Your reports will appear here once they are ready.</p></div>
+  {% endif %}
+
+  <h3 style="margin-top:1.5rem">Test requests in progress <span class="tag">{{ requests|length }}</span></h3>
+  {% if requests %}
+  <div class="table-wrap"><table class="table">
+    <thead><tr><th>Test</th><th>Partner lab</th><th>Collection</th><th>Price</th><th>Status</th></tr></thead>
+    <tbody>{% for t in requests %}
+      <tr>
+        <td><strong>{{ t.lab_test.test.name }}</strong><div class="small muted">{{ t.lab_test.test.category }}</div></td>
+        <td>{{ t.lab_test.lab.name }}</td>
+        <td>{{ t.get_collection_type_display }}<div class="small muted">{% if t.scheduled_slot %}{{ t.scheduled_slot }}{% else %}Preferred {{ t.preferred_date|date:"M d" }}{% endif %}</div></td>
+        <td>₹{{ t.total_price|floatformat:0 }}</td>
+        <td><span class="badge s-{{ t.status }}">{{ t.get_status_display }}</span></td>
+      </tr>{% endfor %}
+    </tbody></table></div>
+  {% else %}
+  <div class="card empty">No test requests in progress.</div>
+  {% endif %}
+  <div class="notice"><span>ℹ️</span><span><strong>Important.</strong> Digital reports are not a diagnosis. Please discuss all results and follow-up with a qualified doctor.</span></div>
+</div>
+{% endblock %}

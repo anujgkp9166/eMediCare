@@ -1,0 +1,12 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:"eMediCare+ Admin" }}{% endblock %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/admin.css' %}"><link rel="icon" href="{% static 'img/favicon.png' %}">{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}"><img src="{% static 'img/logo-mark.png' %}" alt="">{{ site_header|default:"eMediCare+ Control Centre" }}</a></h1>
+{% endblock %}
+
+{% block nav-global %}<a href="{% url 'core:home' %}" style="color:#fff;font-weight:600">View website ↗</a>{% endblock %}

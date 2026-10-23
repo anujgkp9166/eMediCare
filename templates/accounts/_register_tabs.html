@@ -1,0 +1,5 @@
+<div class="role-tabs" role="tablist" aria-label="Account type">
+  <a href="{% url 'accounts:register' %}" class="{% if active == 'patient' %}on{% endif %}">I’m a patient</a>
+  <a href="{% url 'accounts:register_doctor' %}" class="{% if active == 'doctor' %}on{% endif %}">I’m a doctor</a>
+  <a href="{% url 'accounts:register_lab' %}" class="{% if active == 'lab' %}on{% endif %}">I’m a lab partner</a>
+</div>

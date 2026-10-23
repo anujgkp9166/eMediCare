@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Request a test{% endblock %}
+{% block content %}
+<div class="container page-head"><span class="eyebrow">Diagnostics</span><h1 style="font-size:2rem">Request a test</h1><p>Tell us where and when. We’ll confirm the collection details with you.</p></div>
+<div class="container page-body">
+  <form method="post" class="card form-card" novalidate>{% csrf_token %}
+    <div class="notice warn" style="margin-bottom:1.2rem"><span>⚠️</span><span>Only book a test your doctor has recommended.</span></div>
+    {{ form.non_field_errors }}
+    {% for field in form %}{% include "partials/field.html" %}{% endfor %}
+    <button class="btn btn-primary btn-block" type="submit">Send request</button>
+  </form>
+</div>
+{% endblock %}

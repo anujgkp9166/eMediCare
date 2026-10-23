@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Contact{% endblock %}
+{% block content %}
+<div class="container page-head"><span class="eyebrow">Contact</span><h1>We’re here to help</h1><p>Questions, feedback or want to partner with us as a doctor or lab? Send us a message.</p></div>
+<div class="container page-body">
+  <div class="grid g2" style="align-items:start">
+    <form method="post" class="card" novalidate>{% csrf_token %}
+      {{ form.non_field_errors }}
+      {% for field in form %}{% include "partials/field.html" %}{% endfor %}
+      <button class="btn btn-primary btn-block" type="submit">Send message</button>
+    </form>
+    <div class="stack">
+      <div class="card"><h3>Reach us</h3><p class="muted">📍 {{ SITE_LOCATION }}</p>{% if CONTACT_EMAIL %}<p>✉️ <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a></p>{% endif %}{% if CONTACT_PHONE %}<p>📞 <a href="tel:{{ CONTACT_PHONE }}">{{ CONTACT_PHONE }}</a></p>{% endif %}</div>
+      <div class="notice warn"><span>🚑</span><span><strong>Emergency?</strong> Please don’t wait for a reply. Call 108 or go to the nearest hospital.</span></div>
+    </div>
+  </div>
+</div>
+{% endblock %}

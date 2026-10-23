@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}My profile{% endblock %}
+{% block content %}
+<div class="container page-head"><span class="eyebrow">My account</span><h1 style="font-size:2rem">My profile</h1><p>Keep your details up to date so your care team can reach you.</p></div>
+<div class="container page-body">
+  <div class="form-card stack">
+    <form method="post" class="card" novalidate>{% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="form-row">{% include "partials/field.html" with field=form.first_name %}{% include "partials/field.html" with field=form.last_name %}</div>
+      <div class="form-row">{% include "partials/field.html" with field=form.phone %}{% include "partials/field.html" with field=form.email %}</div>
+      <div class="form-row">{% include "partials/field.html" with field=form.gender %}{% include "partials/field.html" with field=form.date_of_birth %}</div>
+      {% include "partials/field.html" with field=form.city %}
+      <button class="btn btn-primary" type="submit">Save changes</button>
+    </form>
+    <div class="card row between wrap"><div><h3 style="margin:0">Password</h3><p class="muted small" style="margin:0">Use a strong password you don’t use elsewhere.</p></div><a class="btn btn-outline btn-sm" href="{% url 'accounts:password_change' %}">Change password</a></div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Join as a doctor{% endblock %}
+{% block footer %}{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card" style="width:min(720px,94%)">
+    <img class="logo" src="{% static 'img/logo-full.png' %}" alt="{{ SITE_NAME }}">
+    {% include "accounts/_register_tabs.html" with active="doctor" %}
+    <h2 class="center">Join {{ SITE_NAME }} as a doctor</h2>
+    <p class="muted center">Register once, log in anytime. Your profile goes live after our team verifies your details.</p>
+    <form method="post" novalidate>{% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="form-section">Your details</div>
+      <div class="form-row">{% include "partials/field.html" with field=form.first_name %}{% include "partials/field.html" with field=form.last_name %}</div>
+      <div class="form-row">{% include "partials/field.html" with field=form.phone %}{% include "partials/field.html" with field=form.email %}</div>
+      {% include "partials/field.html" with field=form.city %}
+      <div class="form-section">Professional details</div>
+      <div class="form-row">{% include "partials/field.html" with field=form.specialization %}{% include "partials/field.html" with field=form.qualification %}</div>
+      <div class="form-row">{% include "partials/field.html" with field=form.registration_number %}{% include "partials/field.html" with field=form.experience_years %}</div>
+      {% include "partials/field.html" with field=form.clinic %}
+      <div class="form-row">{% include "partials/field.html" with field=form.languages %}{% include "partials/field.html" with field=form.consultation_fee %}</div>
+      <div class="form-section">Availability</div>
+      {% include "partials/field.html" with field=form.available_days %}
+      {% include "partials/field.html" with field=form.sessions %}
+      <div class="form-section">Login details</div>
+      {% include "partials/field.html" with field=form.username %}
+      <div class="form-row">{% include "partials/field.html" with field=form.password1 %}{% include "partials/field.html" with field=form.password2 %}</div>
+      {% include "partials/field.html" with field=form.agree %}
+      <button class="btn btn-green btn-block" type="submit">Submit for verification</button>
+    </form>
+    <p class="center small muted" style="margin:1.2rem 0 0">Already registered? <a href="{% url 'accounts:login' %}"><strong>Log in</strong></a></p>
+  </div>
+</div>
+{% endblock %}

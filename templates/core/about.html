@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}About us{% endblock %}
+{% block content %}
+<div class="container page-head"><span class="eyebrow">About {{ SITE_NAME }}</span><h1>Connecting care, not replacing it</h1><p>{{ SITE_NAME }} brings the steps of a healthcare journey, from appointment to follow-up, onto one connected platform.</p></div>
+<div class="container page-body">
+  <div class="grid g2">
+    <div class="card"><h3>The problem we solve</h3><p class="muted">Patients often travel again and again for appointments, consultations and tests, then struggle to find the right lab and keep their reports organised. Waiting time and travel add up, especially for people living far from healthcare centres.</p></div>
+    <div class="card"><h3>Our approach</h3><p class="muted">One platform: appointment, doctor consultation, diagnostic service, digital report and follow-up. The doctor always leads the medical decisions. We provide convenience, continuity and transparent information.</p></div>
+    <div class="card"><h3>Who it is for</h3><p class="muted">Students, working people, families, follow-up patients and everyone who lives far from a healthcare centre.</p></div>
+    <div class="card"><h3>Safety &amp; privacy</h3><p class="muted">Secure sign-in, role-based access and private medical reports that only you, your care team and the {{ SITE_NAME }} administrators can open.</p></div>
+  </div>
+  <div class="band" style="margin-top:2rem"><h2>“{{ SITE_MOTTO }}”</h2><p>An initiative of {{ ORGANISATION }}.</p><a class="btn btn-green" href="{% url 'core:contact' %}">Talk to us</a></div>
+</div>
+{% endblock %}

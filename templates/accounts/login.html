@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Log in{% endblock %}
+{% block footer %}{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <img class="logo" src="{% static 'img/logo-full.png' %}" alt="{{ SITE_NAME }}">
+    <h2 class="center">Welcome back</h2>
+    <p class="muted center">Log in to manage your appointments, tests and reports.</p>
+    <form method="post" novalidate>{% csrf_token %}
+      {{ form.non_field_errors }}
+      {% for field in form %}{% include "partials/field.html" %}{% endfor %}
+      <input type="hidden" name="next" value="{{ next }}">
+      <button class="btn btn-primary btn-block" type="submit">Log in</button>
+    </form>
+    <p class="center small muted" style="margin:1.2rem 0 0">New to {{ SITE_NAME }}? <a href="{% url 'accounts:register' %}"><strong>Create a patient account</strong></a></p>
+    <p class="center small muted" style="margin:.3rem 0 0">Are you a healthcare professional? <a href="{% url 'accounts:register_doctor' %}"><strong>Join as a doctor</strong></a> · <a href="{% url 'accounts:register_lab' %}"><strong>Register your lab</strong></a></p>
+    <p class="center small" style="margin:.4rem 0 0"><a href="{% url 'core:home' %}">← Back to home</a></p>
+  </div>
+</div>
+{% endblock %}

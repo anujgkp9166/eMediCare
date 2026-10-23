@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Appointment{% endblock %}
+{% block content %}
+<div class="container page-head"><a class="small" href="{% url 'care:appointment_list' %}">← All appointments</a><h1 style="font-size:2rem;margin-top:.6rem">Appointment details</h1></div>
+<div class="container page-body">
+  <div class="grid g2" style="align-items:start">
+    <div class="card stack">
+      <div class="row between wrap"><div class="row"><div class="date-chip"><small>{{ appt.date|date:"M" }}</small><b>{{ appt.date|date:"d" }}</b><small>{{ appt.date|date:"D" }}</small></div><div><h3 style="margin:0">{{ appt.date|date:"l, d F Y" }}</h3><div class="muted">🕒 {{ appt.time|time:"h:i A" }}</div></div></div><span class="badge s-{{ appt.status }}">{{ appt.get_status_display }}</span></div>
+      <div class="meta"><span class="tag">{{ appt.get_kind_display }}</span><span class="tag">{{ appt.get_mode_display }}</span></div>
+      {% if appt.reason %}<div><strong>Your note</strong><p class="muted" style="margin:.2rem 0 0">{{ appt.reason|linebreaksbr }}</p></div>{% endif %}
+      {% if appt.status == 'confirmed' and appt.mode == 'online' %}
+        {% if appt.meeting_link %}<a class="btn btn-green" href="{{ appt.meeting_link }}" target="_blank" rel="noopener">Join consultation</a>{% else %}<div class="notice"><span>🔗</span><span>Your video-call link will appear here before the consultation.</span></div>{% endif %}
+      {% elif appt.status == 'requested' %}
+        <div class="notice warn"><span>⏳</span><span>Your request has been received. You will see it as <strong>Confirmed</strong> once our team approves it.</span></div>
+      {% endif %}
+      {% if appt.doctor_advice %}<div class="card flat" style="background:var(--green-l);border-color:#cfe8c3"><strong>Doctor’s advice</strong><p style="margin:.3rem 0 0">{{ appt.doctor_advice|linebreaksbr }}</p></div>{% endif %}
+      <div class="row wrap">
+        {% if appt.status == 'completed' %}<a class="btn btn-primary btn-sm" href="{% url 'care:book' %}?doctor={{ appt.doctor_id }}&kind=follow_up">Book a follow-up</a><a class="btn btn-outline btn-sm" href="{% url 'diagnostics:lab_list' %}">Find a lab test</a>{% endif %}
+        {% if appt.can_cancel %}<form method="post" action="{% url 'care:appointment_cancel' appt.pk %}" onsubmit="return confirm('Cancel this appointment?');">{% csrf_token %}<button class="btn btn-danger btn-sm" type="submit">Cancel appointment</button></form>{% endif %}
+      </div>
+    </div>
+    <div class="card">
+      <h3>Your doctor</h3>
+      <div class="person"><div class="avatar lg">{% if appt.doctor.photo %}<img src="{{ appt.doctor.photo.url }}" alt="">{% else %}{{ appt.doctor.initials }}{% endif %}</div><div><h3 style="margin:0">{{ appt.doctor.display_name }}</h3><div class="muted">{{ appt.doctor.specialization }}</div><span class="verified">✓ Verified</span></div></div>
+      <div class="meta">{% if appt.doctor.qualification %}<span class="tag">{{ appt.doctor.qualification }}</span>{% endif %}{% if appt.doctor.clinic %}<span class="tag">📍 {{ appt.doctor.clinic }}</span>{% endif %}</div>
+      <p class="small muted">{{ SITE_NAME }} does not diagnose. Your doctor makes all medical decisions.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

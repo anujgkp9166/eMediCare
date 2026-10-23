@@ -1,0 +1,24 @@
+<div class="card">
+  <div class="person">
+    <div class="avatar lg">{% if d.photo %}<img src="{{ d.photo.url }}" alt="{{ d.display_name }}">{% else %}{{ d.initials }}{% endif %}</div>
+    <div>
+      <h3>{{ d.display_name }}</h3>
+      <div class="muted">{{ d.specialization }}</div>
+      <div class="verified">✓ Verified</div>
+    </div>
+  </div>
+  <div class="meta">
+    {% if d.qualification %}<span class="tag">{{ d.qualification }}</span>{% endif %}
+    {% if d.experience_years %}<span class="tag">{{ d.experience_years }} yrs experience</span>{% endif %}
+    {% if d.languages %}<span class="tag">{{ d.languages }}</span>{% endif %}
+  </div>
+  {% if d.clinic %}<p class="small muted" style="margin-bottom:.8rem">📍 {{ d.clinic }}</p>{% endif %}
+  <div class="row between">
+    <div class="price">{% if d.consultation_fee %}₹{{ d.consultation_fee|floatformat:0 }}<small> / consult</small>{% else %}<small>Fee on confirmation</small>{% endif %}</div>
+    {% if user.is_authenticated and user.role == 'patient' %}
+      <a class="btn btn-primary btn-sm" href="{% url 'care:book' %}?doctor={{ d.pk }}">Book now</a>
+    {% elif not user.is_authenticated %}
+      <a class="btn btn-primary btn-sm" href="{% url 'accounts:login' %}?next={% url 'care:book' %}%3Fdoctor%3D{{ d.pk }}">Book now</a>
+    {% endif %}
+  </div>
+</div>

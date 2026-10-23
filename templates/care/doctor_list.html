@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Find a doctor{% endblock %}
+{% block content %}
+<div class="container page-head"><span class="eyebrow">Our doctors</span><h1>Find the right doctor</h1><p>Verified doctors available for online consultation and follow-up.</p></div>
+<div class="container page-body">
+  <form class="filters" style="grid-template-columns:1fr auto" method="get">
+    <input class="input" type="search" name="q" value="{{ q }}" placeholder="Search by name or speciality, e.g. Paediatrician" aria-label="Search doctors">
+    <button class="btn btn-primary" type="submit">Search</button>
+  </form>
+  {% if doctors %}
+  <div class="grid g3">{% for d in doctors %}{% include "care/_doctor_card.html" %}{% endfor %}</div>
+  {% else %}
+  <div class="card empty"><div class="big">🔍</div><p>No doctors match your search.</p><a class="btn btn-outline btn-sm" href="{% url 'care:doctor_list' %}">Clear search</a></div>
+  {% endif %}
+</div>
+{% endblock %}

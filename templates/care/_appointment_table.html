@@ -1,0 +1,16 @@
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>Doctor</th><th>Type</th><th>Date &amp; time</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  {% for a in appointments %}
+    <tr>
+      <td><div class="row"><span class="avatar">{{ a.doctor.initials }}</span><div><strong>{{ a.doctor.display_name }}</strong><div class="small muted">{{ a.doctor.specialization }}</div></div></div></td>
+      <td>{{ a.get_kind_display }}<div class="small muted">{{ a.get_mode_display }}</div></td>
+      <td><strong>{{ a.date|date:"M d, Y" }}</strong><div class="small muted">{{ a.time|time:"h:i A" }}</div></td>
+      <td><span class="badge s-{{ a.status }}">{{ a.get_status_display }}</span></td>
+      <td><a href="{% url 'care:appointment_detail' a.pk %}" aria-label="View appointment">View →</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>

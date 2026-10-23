@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Register your lab{% endblock %}
+{% block footer %}{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card" style="width:min(720px,94%)">
+    <img class="logo" src="{% static 'img/logo-full.png' %}" alt="{{ SITE_NAME }}">
+    {% include "accounts/_register_tabs.html" with active="lab" %}
+    <h2 class="center">Register your lab on {{ SITE_NAME }}</h2>
+    <p class="muted center">Register once, log in anytime. Your lab is listed after our team verifies it and sets up your price list with you.</p>
+    <form method="post" novalidate>{% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="form-section">Lab details</div>
+      {% include "partials/field.html" with field=form.lab_name %}
+      <div class="form-row">{% include "partials/field.html" with field=form.license_number %}{% include "partials/field.html" with field=form.lab_phone %}</div>
+      <div class="form-row">{% include "partials/field.html" with field=form.area %}{% include "partials/field.html" with field=form.opening_hours %}</div>
+      {% include "partials/field.html" with field=form.address %}
+      {% include "partials/field.html" with field=form.home_collection %}
+      <div class="form-section">Contact person</div>
+      <div class="form-row">{% include "partials/field.html" with field=form.first_name %}{% include "partials/field.html" with field=form.last_name %}</div>
+      <div class="form-row">{% include "partials/field.html" with field=form.phone %}{% include "partials/field.html" with field=form.email %}</div>
+      {% include "partials/field.html" with field=form.city %}
+      <div class="form-section">Login details</div>
+      {% include "partials/field.html" with field=form.username %}
+      <div class="form-row">{% include "partials/field.html" with field=form.password1 %}{% include "partials/field.html" with field=form.password2 %}</div>
+      {% include "partials/field.html" with field=form.agree %}
+      <button class="btn btn-primary btn-block" type="submit">Submit for verification</button>
+    </form>
+    <p class="center small muted" style="margin:1.2rem 0 0">Already registered? <a href="{% url 'accounts:login' %}"><strong>Log in</strong></a></p>
+  </div>
+</div>
+{% endblock %}

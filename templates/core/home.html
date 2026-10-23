@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container">
+    <div>
+      <span class="eyebrow">{{ SITE_LOCATION }}</span>
+      <h1>Healthcare, <span class="b">just a click</span> <span class="g">away.</span></h1>
+      <p class="hi">पूरी देखभाल, एक ही जगह · {{ SITE_MOTTO }}</p>
+      <p class="lead">Book your doctor online, get your tests done at home, receive digital reports and follow up with the same doctor, all on one simple platform.</p>
+      <div class="hero-actions">
+        {% if user.is_authenticated %}
+          <a class="btn btn-primary" href="{% url 'care:book' %}">Book an appointment</a>
+          <a class="btn btn-outline" href="{% url 'diagnostics:lab_list' %}">Find a lab test</a>
+        {% else %}
+          <a class="btn btn-primary" href="{% url 'accounts:register' %}">Get started, it’s free</a>
+          <a class="btn btn-outline" href="{% url 'care:doctor_list' %}">Meet our doctors</a>
+        {% endif %}
+      </div>
+      <div class="trust"><span>Verified doctors</span><span>Verified partner labs</span><span>Home sample collection</span><span>Private &amp; secure</span></div>
+    </div>
+    <div class="hero-card">
+      <img class="logo-big" src="{% static 'img/logo-full.png' %}" alt="{{ SITE_NAME }} logo">
+      <ol class="mini-steps">
+        <li><span class="n">1</span> Book an appointment</li>
+        <li><span class="n">2</span> Consult your doctor online</li>
+        <li><span class="n">3</span> Test at a partner lab, even at home</li>
+        <li><span class="n">4</span> Get your digital report</li>
+        <li><span class="n">5</span> Follow up with the same doctor</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="container">
+    <div class="section-head center"><span class="eyebrow">Why {{ SITE_NAME }}</span><h2>One platform for your whole care journey</h2><p class="muted">No more running between clinic, lab and back again.</p></div>
+    <div class="grid g3">
+      <div class="card"><div class="icon">🗓️</div><h3>Easy appointments</h3><p class="muted">Pick a doctor, choose a free time and book in under a minute. Reschedule or cancel anytime.</p></div>
+      <div class="card"><div class="icon g">🩺</div><h3>Doctor-first care</h3><p class="muted">Every medical decision stays with a qualified doctor. We simply connect the steps around it.</p></div>
+      <div class="card"><div class="icon r">🧪</div><h3>Labs with clear prices</h3><p class="muted">Compare verified partner labs, test prices and report times before you go.</p></div>
+      <div class="card"><div class="icon a">🏠</div><h3>Home sample collection</h3><p class="muted">For suitable tests, a sample can be collected from your home, with no travel and no queue.</p></div>
+      <div class="card"><div class="icon">📄</div><h3>Digital reports</h3><p class="muted">View your reports securely online whenever you need them. Only you can open them.</p></div>
+      <div class="card"><div class="icon g">🔁</div><h3>Follow-up continuity</h3><p class="muted">Review your report with the same doctor who knows your story.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" style="background:#fff;border-block:1px solid var(--line)">
+  <div class="container">
+    <div class="section-head center"><span class="eyebrow">How it works</span><h2>From consultation to follow-up</h2></div>
+    <div class="journey">
+      <div class="step static"><div class="dot">1</div><strong>Appointment</strong><span class="t">Book online</span></div>
+      <div class="step static"><div class="dot">2</div><strong>Consultation</strong><span class="t">Talk to your doctor</span></div>
+      <div class="step static"><div class="dot">3</div><strong>Diagnostics</strong><span class="t">Lab or home collection</span></div>
+      <div class="step static"><div class="dot">4</div><strong>Digital report</strong><span class="t">Secure online access</span></div>
+      <div class="step static"><div class="dot">5</div><strong>Follow-up</strong><span class="t">Same doctor, same record</span></div>
+    </div>
+  </div>
+</section>
+
+{% if doctors %}
+<section class="block">
+  <div class="container">
+    <div class="row between wrap" style="margin-bottom:1.5rem"><div><span class="eyebrow">Our doctors</span><h2 style="margin:0">Consult a doctor you can trust</h2></div><a class="btn btn-outline" href="{% url 'care:doctor_list' %}">View all doctors</a></div>
+    <div class="grid g3">
+      {% for d in doctors %}{% include "care/_doctor_card.html" %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="block" style="padding-top:0">
+  <div class="container">
+    <div class="section-head center"><span class="eyebrow">Grow with us</span><h2>Are you a doctor or a lab?</h2><p class="muted">Join {{ SITE_NAME }} and reach patients in your area. Every partner is verified before going live.</p></div>
+    <div class="grid g2">
+      <div class="card"><div class="icon g">🩺</div><h3>For doctors</h3><p class="muted">Offer online consultations and follow-ups. Set your own days and sessions and receive confirmed appointments.</p><a class="btn btn-green" href="{% url 'accounts:register_doctor' %}">Register as a doctor</a></div>
+      <div class="card"><div class="icon">🧪</div><h3>For diagnostic labs</h3><p class="muted">List your tests and prices, offer home sample collection and deliver digital reports to patients.</p><a class="btn btn-primary" href="{% url 'accounts:register_lab' %}">Register your lab</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" style="padding-top:0">
+  <div class="container">
+    <div class="band">
+      <div class="grid g2" style="align-items:center">
+        <div><h2>Care, closer to home.</h2><p>Find verified partner labs near you, compare test prices and choose home collection when it suits you.</p><a class="btn btn-green" href="{% url 'diagnostics:lab_list' %}">Explore diagnostic tests</a></div>
+        <div class="stats"><div><b>{{ doctor_count }}</b><span>Verified doctors</span></div><div><b>{{ lab_count }}</b><span>Partner labs</span></div><div><b>{{ test_count }}</b><span>Tests available</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

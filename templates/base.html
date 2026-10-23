@@ -1,0 +1,95 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ SITE_NAME }}{% endblock %} · {{ SITE_TAGLINE }}</title>
+  <meta name="description" content="{{ SITE_NAME }} connects appointments, doctor consultations, diagnostics, digital reports and follow-up care across {{ SITE_LOCATION }}.">
+  <meta name="theme-color" content="#14456b">
+  <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+{% with page=request.resolver_match.url_name %}
+<header class="topbar">
+  <div class="container">
+    <a class="brand" href="{% url 'core:home' %}" aria-label="{{ SITE_NAME }} home">
+      <img src="{% static 'img/logo-mark.png' %}" alt="">
+      <span class="brand-text"><span class="c1">eMedi</span><span class="c2">Care</span><span class="c3">+</span></span>
+    </a>
+    <button class="nav-toggle" data-nav-toggle aria-label="Open menu" aria-expanded="false">☰</button>
+    <nav class="nav" data-nav aria-label="Main">
+      {% if user.is_authenticated %}
+        {% if user.role == 'patient' %}
+          <a href="{% url 'core:dashboard' %}" class="{% if page == 'dashboard' %}active{% endif %}">Overview</a>
+          <a href="{% url 'care:doctor_list' %}" class="{% if page == 'doctor_list' %}active{% endif %}">Doctors</a>
+          <a href="{% url 'care:appointment_list' %}" class="{% if 'appointment' in page or page == 'book' %}active{% endif %}">Appointments</a>
+          <a href="{% url 'diagnostics:lab_list' %}" class="{% if page == 'lab_list' %}active{% endif %}">Find a lab</a>
+          <a href="{% url 'diagnostics:reports' %}" class="{% if page == 'reports' %}active{% endif %}">Reports</a>
+        {% elif user.role == 'doctor' %}
+          <a href="{% url 'care:doctor_portal' %}" class="active">My schedule</a>
+        {% elif user.role == 'lab' %}
+          <a href="{% url 'diagnostics:lab_portal' %}" class="active">Test requests</a>
+        {% else %}
+          <a href="{% url 'admin:index' %}">Admin panel</a>
+        {% endif %}
+        <div class="user-chip">
+          <a href="{% url 'accounts:profile' %}" class="row" style="gap:.5rem;padding:.3rem .5rem" title="My profile"><span class="avatar">{{ user.initials }}</span><span class="small"><strong>{{ user.first_name|default:user.username }}</strong></span></a>
+          <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="linklike" type="submit">Log out</button></form>
+        </div>
+      {% else %}
+        <a href="{% url 'core:home' %}" class="{% if page == 'home' %}active{% endif %}">Home</a>
+        <a href="{% url 'care:doctor_list' %}" class="{% if page == 'doctor_list' %}active{% endif %}">Doctors</a>
+        <a href="{% url 'diagnostics:lab_list' %}" class="{% if page == 'lab_list' %}active{% endif %}">Find a lab</a>
+        <a href="{% url 'core:about' %}" class="{% if page == 'about' %}active{% endif %}">About</a>
+        <a href="{% url 'core:contact' %}" class="{% if page == 'contact' %}active{% endif %}">Contact</a>
+        <a href="{% url 'accounts:login' %}">Log in</a>
+        <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-sm">Register</a>
+      {% endif %}
+    </nav>
+  </div>
+</header>
+{% endwith %}
+{% include "partials/messages.html" %}
+<main id="main">{% block content %}{% endblock %}</main>
+{% block footer %}
+<footer class="footer">
+  <div class="container">
+    <div class="grid g3" style="grid-template-columns:1.4fr 1fr 1fr">
+      <div>
+        <img class="logo-foot" src="{% static 'img/logo-full.png' %}" alt="{{ SITE_NAME }}">
+        <p class="small">One connected healthcare journey: appointment, doctor consultation, diagnostic test, digital report and follow-up.</p>
+      </div>
+      <div>
+        <h4>Quick links</h4>
+        <ul>
+          <li><a href="{% url 'care:doctor_list' %}">Find a doctor</a></li>
+          <li><a href="{% url 'diagnostics:lab_list' %}">Diagnostic labs</a></li>
+          <li><a href="{% url 'core:about' %}">About us</a></li>
+          <li><a href="{% url 'accounts:register_doctor' %}">Join as a doctor</a></li>
+          <li><a href="{% url 'accounts:register_lab' %}">Register your lab</a></li>
+          <li><a href="{% url 'core:contact' %}">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Get in touch</h4>
+        <ul>
+          <li>{{ SITE_LOCATION }}</li>
+          {% if CONTACT_EMAIL %}<li><a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a></li>{% endif %}
+          {% if CONTACT_PHONE %}<li><a href="tel:{{ CONTACT_PHONE }}">{{ CONTACT_PHONE }}</a></li>{% endif %}
+        </ul>
+      </div>
+    </div>
+    <div class="fine">
+      <strong>Care with responsibility.</strong> {{ SITE_NAME }} does not diagnose. Your qualified doctor makes all medical decisions and may recommend an in-person visit when needed. In an emergency, call 108 or go to the nearest hospital.
+      <br>© {% now "Y" %} {{ SITE_NAME }} · {{ ORGANISATION }} · “{{ SITE_MOTTO }}”
+    </div>
+  </div>
+</footer>
+{% endblock %}
+<script src="{% static 'js/site.js' %}" defer></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>
